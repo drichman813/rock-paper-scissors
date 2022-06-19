@@ -1,4 +1,8 @@
-console.log("Hello World");
+let playerScore = 0;
+let computerScore = 0;
+document.getElementById("playerScore").innerHTML = playerScore;
+document.getElementById("computerScore").innerHTML = computerScore;
+let results = "";
 
 function computerPlay() {
     let random = Math.random();
@@ -11,7 +15,8 @@ function computerPlay() {
     }
 }
 
-function playRound(playerSelection, computerSelection) {
+function playRound(playerSelection) {
+    const computerSelection = computerPlay();
     playerSelection = playerSelection.toLowerCase();
     playerSelection = playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1);
 
@@ -26,11 +31,34 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-function game() {
-    for (let i = 0; i < 5; i++) {
-        playerSelection = prompt("Rock, paper, or scissors?");
-        computerSelection = computerPlay();
-        results = playRound(playerSelection, computerSelection);
-        console.log(results);
+function updateResults(results) {
+    document.getElementById("last-game-results").innerHTML = results;
+    if (results.includes("win")) {
+        playerScore++;
+    } else if (results.includes("lose")) {
+        computerScore++;
+    }
+    document.getElementById("playerScore").innerHTML = playerScore;
+    document.getElementById("computerScore").innerHTML = computerScore;
+    if (playerScore == 5) {
+        if (confirm("You are the ultimate champion! Dare to try again?")) {
+            reset();
+        };
+    } else if (computerScore == 5) {
+        if (confirm("You lost to a computer, the takeover will begin soon. Dare to try again?")) {
+            reset();
+        };
     }
 }
+
+function reset() {
+    playerScore = 0;
+    computerScore = 0;
+    results = "";
+}
+
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => button.addEventListener('click', () => updateResults(playRound(button.id))));
+
+
+
